@@ -2,6 +2,7 @@
 
 import { AuthUser } from "@/app/api/auth/[...nextauth]/authOptions";
 import Image from "@/components/Image";
+import Button from "@/components/atomic/Button";
 import { useSession, signOut, signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -35,14 +36,7 @@ export default function AccountButton() {
   const signedIn = session && session.status === "authenticated";
 
   if (!signedIn) {
-    return (
-      <button
-        className="whitespace-nowrap py-2 px-3 hover:bg-theme-600 border rounded-md border-theme-100 divide-y divide-theme-100 bg-theme-700"
-        onClick={() => signIn("spotify")}
-      >
-        sign in
-      </button>
-    );
+    return <Button onClick={() => signIn("spotify")}>sign in</Button>;
   }
 
   const { user }: { user: AuthUser } = session.data;
