@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthUser } from "@/app/api/auth/[...nextauth]/authOptions";
-import Image from "@/components/Image";
+import Image from "@/components/atomic/Image";
 import Button from "@/components/atomic/Button";
 import { useSession, signOut, signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
