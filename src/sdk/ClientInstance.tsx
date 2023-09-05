@@ -35,11 +35,11 @@ class NextAuthStrategy implements IAuthStrategy {
   }
 
   public removeAccessToken(): void {
-    console.warn("removeAccessToken not implemented");
+    console.warn("[Spotify-SDK][WARN]\nremoveAccessToken not implemented");
   }
 
   public setConfiguration(configuration: SdkConfiguration): void {
-    console.warn("setConfiguration not implemented");
+    console.warn("[Spotify-SDK][WARN]\nsetConfiguration not implemented");
   }
 }
 
