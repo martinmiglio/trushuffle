@@ -8,7 +8,7 @@ import {
   SdkOptions,
   SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
 /**
  * A class that implements the IAuthStrategy interface and wraps the NextAuth functionality.
@@ -24,7 +24,14 @@ class NextAuthStrategy implements IAuthStrategy {
     if (!session) {
       return {} as AccessToken;
     }
+
+    if (session?.error === "RefreshAccessTokenError") {
+      await signIn();
+      return this.getAccessToken();
+    }
+
     const { user }: { user: AuthUser } = session;
+
     return {
       access_token: user.access_token,
       token_type: "Bearer",
