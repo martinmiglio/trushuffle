@@ -3,7 +3,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "via.placeholder.com" },
-      { protocol: "https", hostname: "i.scdn.co" },
+      { protocol: "https", hostname: "**.scdn.co" },
+      { protocol: "https", hostname: "**.spotifycdn.com" },
     ],
   },
 };
