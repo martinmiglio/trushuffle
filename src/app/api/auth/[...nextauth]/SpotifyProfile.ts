@@ -13,8 +13,11 @@ const spotifyProfile = SpotifyProvider({
   clientId: env.SPOTIFY_CLIENT_ID,
   clientSecret: env.SPOTIFY_CLIENT_SECRET,
   profile(profile) {
-    type SpotyifyImage = { url: string; height: number; width: number };
-    const images = profile.images as SpotyifyImage[];
+    const images = profile.images as {
+      url: string;
+      height: number;
+      width: number;
+    }[];
     const image = images.reduce((prev, current) => {
       return prev.height > current.height ? prev : current;
     });
@@ -39,10 +42,7 @@ const scopes = [
   "playlist-read-collaborative",
 ];
 
-authURL.searchParams.append(
-  "scope",
-  scopes.map((scope) => encodeURIComponent(scope)).join(" "),
-);
+authURL.searchParams.append("scope", scopes.join(" "));
 
 spotifyProfile.authorization = authURL.toString();
 
