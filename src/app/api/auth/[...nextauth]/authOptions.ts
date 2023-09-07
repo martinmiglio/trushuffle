@@ -52,7 +52,7 @@ const authOptions: AuthOptions = {
     },
     async session({ session, token }: { session: any; token: any }) {
       const user: AuthUser = {
-        ...session,
+        ...session.user,
         access_token: token.access_token,
         token_type: token.token_type,
         expires_at: token.expires_at,
