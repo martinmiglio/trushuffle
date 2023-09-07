@@ -1,7 +1,7 @@
 "use client";
 
 import { IconButton } from "@/components/atomic/Button";
-import sdk from "@/sdk/ClientInstance";
+import sdk from "@/lib/spotify-sdk/ClientInstance";
 import {
   faPlay,
   faPause,
@@ -134,4 +134,3 @@ function GoForwardButton({
     </IconButton>
   );
 }
-

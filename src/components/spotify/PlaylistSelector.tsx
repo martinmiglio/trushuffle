@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "../atomic/Image";
-import sdk from "@/sdk/ClientInstance";
+import sdk from "@/lib/spotify-sdk/ClientInstance";
 import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
