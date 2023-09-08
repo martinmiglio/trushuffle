@@ -59,6 +59,11 @@ export default function PlaylistSelector({
       loadMore={loadMorePosts}
       hasMore={hasMorePosts}
       className="flex flex-col gap-2"
+      loader={
+        <div className="mx-auto h-16">
+          <Loading />
+        </div>
+      }
     >
       {userPlaylists.map((curPlaylist) => (
         <PlaylistButton

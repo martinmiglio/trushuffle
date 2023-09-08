@@ -26,6 +26,12 @@ const config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      // extend animate bounce with a 200 and 400ms delay
+      animation: {
+        bounce: "bounce 1s ease-in-out infinite",
+        bounce200: "bounce 1s ease-in-out 200ms infinite",
+        bounce400: "bounce 1s ease-in-out 400ms infinite",
+      },
     },
   },
   plugins: [],
