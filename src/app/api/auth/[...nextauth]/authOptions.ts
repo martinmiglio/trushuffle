@@ -1,13 +1,7 @@
 import spotifyProfile, { refreshAccessToken } from "./SpotifyProfile";
+import { env } from "@/env/server";
 import { Account, AuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { z } from "zod";
-
-const schema = z.object({
-  NEXTAUTH_SECRET: z.string(),
-});
-
-const env = schema.parse(process.env);
 
 export type AuthUser = {
   name: string;

@@ -1,13 +1,6 @@
+import { env } from "@/env/server";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
-import { z } from "zod";
-
-const schema = z.object({
-  SPOTIFY_CLIENT_ID: z.string(),
-  SPOTIFY_CLIENT_SECRET: z.string(),
-});
-
-const env = schema.parse(process.env);
 
 const spotifyProfile = SpotifyProvider({
   clientId: env.SPOTIFY_CLIENT_ID,
