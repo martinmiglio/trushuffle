@@ -113,7 +113,7 @@ function PlaylistButton({
           quality={100}
         />
       </div>
-      <div>{playlist.name}</div>
+      <div className="flex-1">{playlist.name}</div>
     </span>
   );
 }
