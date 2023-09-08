@@ -1,5 +1,6 @@
 "use client";
 
+import { env } from "@/env/client";
 import sdk from "@/lib/spotify-sdk/ClientInstance";
 import { defaultPageLength, getAllPages } from "@/lib/spotify-sdk/Pagination";
 import {
@@ -107,7 +108,7 @@ export class LikedTracksPlaylist implements StandardizedPlaylist {
       {
         height: 128,
         width: 128,
-        url: "/api/images/liked",
+        url: env.NEXT_PUBLIC_URL + "/api/images/liked",
       },
     ];
     this.name = "Liked Songs";
