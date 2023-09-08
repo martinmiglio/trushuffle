@@ -27,6 +27,7 @@ class NextAuthStrategy implements IAuthStrategy {
     }
 
     if (session?.error === "RefreshAccessTokenError") {
+      console.info("[Spotify-SDK][INFO]\nRefreshing access token");
       await signIn();
       return this.getAccessToken();
     }
