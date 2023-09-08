@@ -4,11 +4,12 @@ import { AuthUser } from "@/app/api/auth/[...nextauth]/authOptions";
 import {
   AccessToken,
   IAuthStrategy,
+  IHandleErrors,
   SdkConfiguration,
   SdkOptions,
   SpotifyApi,
 } from "@spotify/web-api-ts-sdk";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 
 /**
  * A class that implements the IAuthStrategy interface and wraps the NextAuth functionality.
@@ -55,4 +56,16 @@ function withNextAuthStrategy(config?: SdkOptions) {
   return new SpotifyApi(strategy, config);
 }
 
-export default withNextAuthStrategy();
+class ClientErrorHandler implements IHandleErrors {
+  public async handleErrors(error: any) {
+    console.error("[Spotify-SDK][ERROR]", error);
+    await signOut();
+    return false;
+  }
+}
+
+const config: SdkOptions = {
+  errorHandler: new ClientErrorHandler(),
+};
+
+export default withNextAuthStrategy(config);

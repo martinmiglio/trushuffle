@@ -3,6 +3,7 @@
 import Button, { IconButton } from "@/components/atomic/Button";
 import shuffle from "@/lib/shuffle";
 import sdk from "@/lib/spotify-sdk/ClientInstance";
+import { StandardizedPlaylist } from "@/lib/spotify-sdk/Playlists";
 import {
   faPlay,
   faPause,
@@ -10,27 +11,25 @@ import {
   faFastForward,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Device,
-  Devices,
-  PlaybackState,
-  Playlist,
-} from "@spotify/web-api-ts-sdk";
+import { Device, Devices, PlaybackState } from "@spotify/web-api-ts-sdk";
 import { useEffect, useState } from "react";
 
-const playPlaylist = async (playlist: Playlist, device: Device) => {
+const playPlaylist = async (playlist: StandardizedPlaylist, device: Device) => {
   await sdk.player.togglePlaybackShuffle(false, device.id ?? undefined);
-  const shuffledTracks = shuffle(
-    playlist.tracks.items.map((item) => item.track),
-  );
+  const playlistItems = await playlist.getAllPlaylistItems();
+  const shuffledTracks = shuffle(playlistItems);
   await sdk.player.startResumePlayback(
     device.id ?? "",
     undefined,
-    shuffledTracks.map((track) => track.uri),
+    shuffledTracks.map((playlistedTrack) => playlistedTrack.track.uri),
   );
 };
 
-export default function Player({ playlist }: { playlist: Playlist | null }) {
+export default function Player({
+  playlist,
+}: {
+  playlist: StandardizedPlaylist | null;
+}) {
   const [playBackState, setPlayBackState] = useState<PlaybackState | null>(
     null,
   );
@@ -84,7 +83,7 @@ function PlayPauseButton({
   playlist,
   playBackState,
   updatePlayBackState,
-}: PlayerChildrenProps & { playlist: Playlist | null }) {
+}: PlayerChildrenProps & { playlist: StandardizedPlaylist | null }) {
   const togglePlayPause = async () => {
     if (!playBackState?.device.id || !playlist) {
       return;
@@ -189,7 +188,6 @@ function DeviceSelector({
 
   useEffect(() => {
     sdk.player.getAvailableDevices().then((res) => {
-      console.log("AVAILABLE DEVICES", res);
       setDevices(res);
     });
   }, []);

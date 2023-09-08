@@ -1,57 +1,64 @@
 "use client";
 
 import Image from "../atomic/Image";
+import Loading from "../atomic/Loading";
 import sdk from "@/lib/spotify-sdk/ClientInstance";
-import { Page, Playlist, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+import {
+  LikedTracksPlaylist,
+  StandardizedPlaylist,
+  Playlist,
+} from "@/lib/spotify-sdk/Playlists";
+import { Page, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 
 export default function PlaylistSelector({
-  playlist,
-  setPlaylist,
+  selectedPlaylist,
+  setSelectedPlaylist,
 }: {
-  playlist: Playlist | null;
-  setPlaylist: (playlist: Playlist) => void;
+  selectedPlaylist: StandardizedPlaylist | null;
+  setSelectedPlaylist: (playlist: StandardizedPlaylist) => void;
 }) {
-  const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
+  const [userPlaylists, setUserPlaylists] = useState<StandardizedPlaylist[]>([
+    new LikedTracksPlaylist(),
+  ]);
   const [hasMorePosts, setHasMorePosts] = useState(true);
 
   const loadMorePosts = async (page: number) => {
-    const pageSize = 15;
-
+    // get the next page of playlists
     const res: Page<SimplifiedPlaylist> =
-      await sdk.currentUser.playlists.playlists(
-        pageSize,
-        (page - 1) * pageSize,
-      );
+      await sdk.currentUser.playlists.playlists(10, (page - 1) * 10);
 
     if (res.items.length === 0) {
       setHasMorePosts(false);
       return;
     }
 
-    const fullPlaylists = await Promise.all(
-      res.items.map((playlist) => sdk.playlists.getPlaylist(playlist.id)),
-    );
+    // get the full playlist data for each playlist
+    const fullPlaylists: StandardizedPlaylist[] = [];
+    for (const playlist of res.items) {
+      fullPlaylists.push(
+        new Playlist(await sdk.playlists.getPlaylist(playlist.id)),
+      );
+    }
 
     setUserPlaylists([...userPlaylists, ...fullPlaylists]);
   };
 
   // when a playlist is selected, we want to move it to the top of the list
-  // this is done by removing it from the list and adding it to the top
   useEffect(() => {
-    if (!playlist) {
+    if (!selectedPlaylist) {
       return;
     }
 
     setUserPlaylists((prevPlaylists) => {
       const newPlaylists = prevPlaylists.filter(
-        (curPlaylist) => curPlaylist.id !== playlist.id,
+        (curPlaylist) => curPlaylist.id !== selectedPlaylist.id,
       );
-      newPlaylists.unshift(playlist);
+      newPlaylists.unshift(selectedPlaylist);
       return newPlaylists;
     });
-  }, [playlist]);
+  }, [selectedPlaylist]);
 
   return (
     <InfiniteScroll
@@ -60,7 +67,7 @@ export default function PlaylistSelector({
       hasMore={hasMorePosts}
       className="flex flex-col gap-2"
       loader={
-        <div className="mx-auto h-16">
+        <div className="mx-auto h-16" key="loader">
           <Loading />
         </div>
       }
@@ -70,9 +77,9 @@ export default function PlaylistSelector({
           key={curPlaylist.id}
           playlist={curPlaylist}
           onClick={() => {
-            setPlaylist(curPlaylist);
+            setSelectedPlaylist(curPlaylist);
           }}
-          selected={curPlaylist.id === playlist?.id}
+          selected={curPlaylist.id === selectedPlaylist?.id}
         />
       ))}
     </InfiniteScroll>
@@ -84,7 +91,7 @@ function PlaylistButton({
   onClick,
   selected,
 }: {
-  playlist: Playlist;
+  playlist: StandardizedPlaylist;
   onClick?: () => void;
   selected?: boolean;
 }) {
