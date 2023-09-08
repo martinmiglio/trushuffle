@@ -21,7 +21,9 @@ const playPlaylist = async (playlist: StandardizedPlaylist, device: Device) => {
   await sdk.player.startResumePlayback(
     device.id ?? "",
     undefined,
-    shuffledTracks.map((playlistedTrack) => playlistedTrack.track.uri),
+    shuffledTracks
+      .map((playlistedTrack) => playlistedTrack.track.uri)
+      .slice(0, 300),
   );
 };
 
