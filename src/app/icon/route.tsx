@@ -1,5 +1,5 @@
 import config from "@/../tailwind.config.js";
-import { ImageResponse } from "next/server";
+import { ImageResponse } from "next/og";
 
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
